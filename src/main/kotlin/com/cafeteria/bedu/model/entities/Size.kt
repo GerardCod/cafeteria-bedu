@@ -1,4 +1,4 @@
-package com.cafeteria.bedu.model
+package com.cafeteria.bedu.model.entities
 
 /**
  * Enum con los valores de los tamaños de los diferentes productos de la cafetería.
