@@ -5,7 +5,10 @@ import com.cafeteria.bedu.model.entities.OrderProduct
 /**
  * Función de orden superior para componer funciones que apliquen descuentos a la operación de obtener total.
  */
-val composeGetTotal = fun(getTotalOp: (List<OrderProduct>) -> Float, discountOp: (Float) -> Float): (List<OrderProduct>) -> Float {
+val composeGetTotal = fun(
+                getTotalOp: (List<OrderProduct>) -> Float,
+                discountOp: (Float) -> Float
+): (List<OrderProduct>) -> Float {
     return {
         products -> discountOp(getTotalOp(products))
     }
