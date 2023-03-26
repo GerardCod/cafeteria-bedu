@@ -96,7 +96,7 @@ class ProductInteractorImpl: ProductInteractor {
 
         val total = when(discount) {
             Discount.PROMO_20 -> getOrderTotal(products, promo20)
-            Discount.PROMO_15 -> getOrderTotal(products, promo20)
+            Discount.PROMO_15 -> getOrderTotal(products, promo15)
             Discount.HALF_IVA -> getOrderTotal(products, halfIva)
             else -> getOrderTotal(products, normalPrice)
         }
@@ -115,5 +115,13 @@ class ProductInteractorImpl: ProductInteractor {
      */
     override fun showProductList(): List<OrderProduct> {
         return products
+    }
+
+    /**
+     * Obtiene el subtotal del precio de la compra.
+     * @return el subtotal de la compra del cliente.
+     */
+    override fun getOrderSubTotal(): Float {
+        return getSubTotal(products)
     }
 }

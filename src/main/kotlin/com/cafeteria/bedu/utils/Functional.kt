@@ -3,14 +3,28 @@ package com.cafeteria.bedu.utils
 import com.cafeteria.bedu.model.entities.OrderProduct
 
 /**
- * Función de orden superior para componer funciones que apliquen descuentos a la operación de obtener total.
+ * Función de orden superior para componer funciones que apliquen descuentos a la operación de
+ * obtener el precio total de la orden.
  */
-val composeGetTotal = fun(
+val composeGetTotalWithDiscount = fun(
                 getTotalOp: (List<OrderProduct>) -> Float,
                 discountOp: (Float) -> Float
 ): (List<OrderProduct>) -> Float {
     return {
         products -> discountOp(getTotalOp(products))
+    }
+}
+
+/**
+ * Función de orden superior que compone una función con un IVA aplicado
+ */
+val composeGetTotal = fun(
+    getSubtotalOp: (List<OrderProduct>) -> Float,
+    iva: Float
+): (List<OrderProduct>) -> Float {
+    return fun(products: List<OrderProduct>): Float {
+        val subTotal = getSubtotalOp(products)
+        return subTotal + (subTotal * iva)
     }
 }
 
@@ -23,25 +37,23 @@ val getOrderTotal = fun (products: List<OrderProduct>, consumer: (List<OrderProd
 }
 
 /**
+ * Obtiene el precio total de la orden sin IVA.
+ */
+val getSubTotal = { products: List<OrderProduct> ->
+    products.map { product -> product.price * product.quantity }
+        .reduce { prev, next -> prev + next }
+}
+
+/**
  * Obtiene el precio normal de la orden con el IVA del %16
  */
-val normalPrice = { products: List<OrderProduct> ->
-    products.map { product ->
-        product.price * product.quantity
-    }.reduce {
-            prev, next -> prev + next
-    }.times(1.16f)
-}
+val normalPrice = composeGetTotal(getSubTotal, 0.16f)
 
 /**
  * Obtiene el precio total de la orden con la promoción
  * de medio IVA aplicado.
  */
-val halfIva = { products: List<OrderProduct> ->
-    products.map { product ->
-        product.price * product.quantity
-    }.reduce { prev, next -> prev + next }.times(1.08f)
-}
+val halfIva = composeGetTotal(getSubTotal, 0.08f)
 
 /**
  * Lambda auxiliar para aplicar el descuento del 20% al total
@@ -58,9 +70,9 @@ val applyPromo15 = { total: Float -> total * 0.85f }
 /**
  * Función que aplica la promoción del 20% de descuento a la compra.
  */
-val promo20 = composeGetTotal(normalPrice, applyPromo20)
+val promo20 = composeGetTotalWithDiscount(normalPrice, applyPromo20)
 
 /**
  * Función que aplica la promoción del 15% de descuento a la compra.
  */
-val promo15 = composeGetTotal(normalPrice, applyPromo15)
+val promo15 = composeGetTotalWithDiscount(normalPrice, applyPromo15)

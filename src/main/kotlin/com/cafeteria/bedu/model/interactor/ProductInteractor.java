@@ -16,5 +16,6 @@ public interface ProductInteractor {
     Integer addProductToOrder(Product product);
     void removeProductFromOrder(Product product);
     Float getTotal(@Nullable Discount discount, Float cash);
+    Float getOrderSubTotal();
     List<OrderProduct> showProductList();
 }
