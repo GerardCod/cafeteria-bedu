@@ -4,6 +4,7 @@ import com.cafeteria.bedu.model.entities.Discount
 import com.cafeteria.bedu.model.entities.Order
 import com.cafeteria.bedu.model.entities.OrderProduct
 import com.cafeteria.bedu.model.entities.Product
+import com.cafeteria.bedu.model.exceptions.ProductNotAddedException
 
 class ProductInteractorImpl: ProductInteractor {
     var products: MutableList<OrderProduct>
@@ -33,6 +34,11 @@ class ProductInteractorImpl: ProductInteractor {
         return count
     }
 
+    /**
+     * Método de ayuda para realizar la búsqueda de un producto en la lista de productos en
+     * la orden del cliente.
+     * @param product El producto a buscar en la lista de productos en la orden.
+     */
     private fun contains(product: Product?): Int {
         var index = 0
 
@@ -47,14 +53,22 @@ class ProductInteractorImpl: ProductInteractor {
     }
 
     override fun removeProductFromOrder(product: Product?) {
+        val productAt = contains(product)
 
+        if (productAt == -1) {
+            throw ProductNotAddedException("El producto no está en su orden", product)
+        }
+
+        products.removeAt(productAt)
+        count--
     }
 
-    override fun payOrder(discount: Discount?, cash: Float?) {
-        TODO("Not yet implemented")
+    override fun getTotal(discount: Discount?, cash: Float?): Float {
+
+        return 0.0f
     }
 
-    override fun showOrder(): Order {
-        TODO("Not yet implemented")
+    override fun showProductList(): List<OrderProduct> {
+        return products
     }
 }
