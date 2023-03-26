@@ -8,4 +8,12 @@ open class Product(
     var price: Float,
     var flavor: String,
     var size: Size
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        val otherProduct = other as Product
+        return (this.name == otherProduct.name) &&
+                (this.price == otherProduct.price) &&
+                (this.flavor == otherProduct.flavor) &&
+                (this.size == otherProduct.size)
+    }
+}

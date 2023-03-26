@@ -8,6 +8,6 @@ class OrderProduct(
     price: Float,
     flavor: String,
     size: Size,
-    var quantity: Integer
+    var quantity: Int
 ): Product(name = name, price = price, flavor = flavor, size = size) {
 }
